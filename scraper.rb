@@ -21,7 +21,11 @@ end
 WikiData.ids_from_pages('tr', candidates.map { |c| c[:wikiname] }).each_with_index do |p, i|
   puts i if (i % 50).zero?
   next if ScraperWiki.select('COUNT(*) as gotit FROM data WHERE id = ?', p.last).first["gotit"] == 1
-  data = WikiData::Fetcher.new(id: p.last).data('tr') or next
+  data = WikiData::Fetcher.new(id: p.last).data('tr') rescue nil
+  unless data
+    warn "No data for #{p}"
+    next
+  end
   ScraperWiki.save_sqlite([:id], data)
 end
 
