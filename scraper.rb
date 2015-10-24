@@ -20,12 +20,15 @@ end
 
 WikiData.ids_from_pages('tr', candidates.map { |c| c[:wikiname] }).each_with_index do |p, i|
   puts i if (i % 50).zero?
-  next if ScraperWiki.select('COUNT(*) as gotit FROM data WHERE id = ?', p.last).first["gotit"] == 1
+  # next if ScraperWiki.select('COUNT(*) as gotit FROM data WHERE id = ?', p.last).first["gotit"] == 1
   data = WikiData::Fetcher.new(id: p.last).data('tr') rescue nil
   unless data
     warn "No data for #{p}"
     next
   end
+  data[:orig] = p.first
   ScraperWiki.save_sqlite([:id], data)
 end
+
+warn RestClient.post ENV['MORPH_REBUILDER_URL'], {} if ENV['MORPH_REBUILDER_URL']
 
