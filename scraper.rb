@@ -10,4 +10,4 @@ scraper_ids = EveryPolitician::Wikidata.morph_wikinames(source: 'tmtmtmtm/turkey
 # This _should_ be unnecessary, but we can remove it once we've switched to all IDs
 scraper_names = EveryPolitician::Wikidata.morph_wikinames(source: 'tmtmtmtm/turkey-tbmm-wikipedia', column: 'wikipedia__tr')
 
-EveryPolitician::Wikidata.scrape_wikidata(ids: existing | scraper_ids, names: { tr: scraper_names })
+EveryPolitician::Wikidata.scrape_wikidata(ids: existing | scraper_ids, names: { tr: scraper_names }, batch_size: 200)
